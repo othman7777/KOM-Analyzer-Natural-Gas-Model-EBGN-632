@@ -1,0 +1,123 @@
+GAMS 28.2.0  r750fa45 Released Aug 19, 2019 WEX-WEI x86 64bit/MS Windows 10/27/19 22:06:40 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  set
+   2  i "production wells" /W1, W2, W3, W4, W5, W6, W7, W8, W9, W10/,
+   3  j "enduse option" /power_plant, LDC, LNG_export_company, petrochemical_pla
+      nt, Waha_Hub/;
+   4   
+   5  parameter
+   6   
+   7  e(j) "gas delivering cost ($ / BTU / day)"
+   8  /
+   9  LNG_export_company 300,
+  10  Power_plant 100,
+  11  Waha_Hub 170,
+  12  LDC 150,
+  13  Petrochemical_plant 360
+  14  /
+  15   
+  16  p(j) "revenue from enduse option ($ / BTU / day)"
+  17  /
+  18  LNG_export_company 500,
+  19  Power_plant 350,
+  20  Waha_Hub 400,
+  21  LDC 300,
+  22  Petrochemical_plant 550
+  23  /,
+  24   
+  25  k(i) "capacity per well (BTUs / day)"
+  26  /
+  27  W1 1554000000,
+  28  W2 1554000000,
+  29  W3 1554000000,
+  30  W4 1554000000,
+  31  W5 1554000000,
+  32  W6 1554000000,
+  33  W7 1554000000,
+  34  W8 1554000000,
+  35  W9 1554000000,
+  36  W10 1554000000
+  37  /,
+  38   
+  39  l(j) "capacity of enduse option (BTUs / day)"
+  40  /
+  41  LNG_export_company 1000,
+  42  Power_plant 1000,
+  43  Waha_Hub 1000,
+  44  LDC 1000,
+  45  Petrochemical_plant 1000
+  46  /;
+  47   
+  48  scalar c "cost of extracting and processing gas ($ / BTU / day)" /0.000400
+      3/
+  49   
+  50  Positive variables
+  51  X "Total production (BTUs / day)",
+  52  Y(j) "enduse activity (BTUs / day)",
+  53  W(i,j) "conversion from i to j (BTUs / day)";
+  54   
+  55  Variables Z "objective function value";
+  56   
+  57   
+  58  Equations
+  59  Total_Production "total produced gas",
+  60  ObjFn "computed objective function value",
+  61  End_Limit(j) "cannot sell more than what options are allowed",
+  62  Sell_Limit(i,j) "can only sell what you have processed"
+  63  ;
+  64  Total_Production .. X =e= sum(i,k(i));
+  65  ObjFn .. Z =e= (sum(j,(p(j)-e(j))*Y(j)))-(c*X);
+  66   
+  67   
+  68  End_Limit(j).. l(j) =g= Y(j);
+  69  Sell_Limit(i,j).. sum(i,W(i,j)) =g= Y(j);
+****                         $125
+  70   
+  71  Model workshop /all/;
+  72   
+  73  solve workshop using lp maximizing Z;
+****                                      $257
+  74   
+  75   
+  76   
+  77   
+  78   
+  79   
+  80   
+  81   
+  82   
+  83   
+  84   
+  85   
+  86   
+  87   
+  88   
+  89   
+GAMS 28.2.0  r750fa45 Released Aug 19, 2019 WEX-WEI x86 64bit/MS Windows 10/27/19 22:06:40 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Error Messages
+
+
+125  Set is under control already
+257  Solve statement not checked because of previous errors
+
+**** 2 ERROR(S)   0 WARNING(S)
+
+
+COMPILATION TIME     =        0.016 SECONDS      3 MB  28.2.0 r750fa45 WEX-WEI
+
+
+USER: GAMS Development Corporation, USA              G871201/0000CA-ANY
+      Free Demo, +1 202-342-0180, support@gams.com, www.gams.com DC0000
+
+
+**** FILE SUMMARY
+
+Input      C:\Users\pc\Documents\GitHub\KOM-Analyzer-Natural-Gas-Model-EBGN-632\
+           komanalyzer-main-fix_errors.gms
+Output     C:\Users\pc\Documents\gamsdir\projdir\komanalyzer-main-fix_errors.lst
+
+**** USER ERROR(S) ENCOUNTERED
