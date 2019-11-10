@@ -59,31 +59,15 @@ Equations
 Total_Production "total produced gas",
 ObjFn "computed objective function value",
 End_Limit(j) "cannot sell more than what options are allowed",
-Sell_Limit(i,j) "can only sell what you have processed"
+Sell_Limit(j) "can only sell what you have processed"
 ;
 Total_Production .. X =e= sum(i,k(i));
 ObjFn .. Z =e= (sum(j,(p(j)-e(j))*Y(j)))-(c*X);
 
 
 End_Limit(j).. l(j) =g= Y(j);
-Sell_Limit(i,j).. sum(i,W(i,j)) =g= Y(j);
+Sell_Limit(j).. sum(i,W(i,j)) =g= Y(j);
 
 Model workshop /all/;
 
 solve workshop using lp maximizing Z;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
